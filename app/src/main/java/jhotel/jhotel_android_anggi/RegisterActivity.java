@@ -1,7 +1,6 @@
 package jhotel.jhotel_android_anggi;
 
-import android.support.v7.app.AlertDialog;
-//import android.app.AlertDialog;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,40 +20,37 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        final EditText FullNameInputReg = (EditText) findViewById(R.id.inputFullName);
-        final EditText emailInputReg = (EditText) findViewById(R.id.inputEmailReg);
-        final EditText passInputReg = (EditText) findViewById(R.id.inputPassReg);
-        final Button buttonRegis = (Button) findViewById(R.id.buttonRegister);
-
+        final EditText inputName = findViewById(R.id.inputName);
+        final EditText emailInputReg = findViewById(R.id.inputEmailReg);
+        final EditText passInputReg = findViewById(R.id.inputPassReg);
+        final Button buttonRegis = findViewById(R.id.buttonRegister);
         buttonRegis.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                final String name = FullNameInputReg.getText().toString();
+            public void onClick(View V) {
+                final String name = inputName.getText().toString();
                 final String email = emailInputReg.getText().toString();
                 final String password = passInputReg.getText().toString();
 
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                Response.Listener<String> responseListener = new Response.Listener<String> () {
                     @Override
                     public void onResponse(String response) {
                         try{
                             JSONObject jsonResponse = new JSONObject(response);
-                            if (jsonResponse!=null){
-                                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+                            if(jsonResponse!=null) {
+                                AlertDialog.Builder builder= new AlertDialog.Builder(RegisterActivity.this);
                                 builder.setMessage("Registration Success")
                                         .create()
                                         .show();
                             }
-                        }
-                        catch (JSONException e){
+                        } catch (JSONException e) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                            builder.setMessage("Registration Failed")
+                            builder.setMessage("Registration Failed.")
                                     .create()
                                     .show();
                         }
                     }
                 };
-                RegisterRequest registerRequest = new RegisterRequest(name, email, password, responseListener);
+                RegisterRequest registerRequest = new RegisterRequest(name,email,password,responseListener);
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 queue.add(registerRequest);
             }

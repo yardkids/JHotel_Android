@@ -11,7 +11,7 @@ import java.util.Map;
  */
 
 public class RegisterRequest extends StringRequest {
-    private static final String Regis_URL = "http://192.168.43.233/newcustomer";
+    private static final String Regis_URL = "http://192.168.1.101:8080/newcustomer";
     private Map<String, String> params;
 
     public RegisterRequest(String name, String email, String password,
@@ -19,14 +19,12 @@ public class RegisterRequest extends StringRequest {
         super(Method.POST, Regis_URL, listener, null);
         params = new HashMap<>();
         params.put("name", name);
-        params.put("email", email);
+        params.put("email",email);
         params.put("password", password);
-
     }
 
     @Override
     public Map<String, String> getParams() {
         return params;
     }
-
 }

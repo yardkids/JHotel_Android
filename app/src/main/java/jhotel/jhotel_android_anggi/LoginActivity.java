@@ -1,7 +1,7 @@
 package jhotel.jhotel_android_anggi;
 
-import android.support.v7.app.AlertDialog;
-//import android.app.AlertDialog;
+//import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,23 +18,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        final EditText emailInput = (EditText) findViewById(R.id.inputEmail);
-        final EditText passInput = (EditText) findViewById(R.id.inputPass);
-        final Button loginButton = (Button) findViewById(R.id.buttonLogin);
+        final EditText emailInput = findViewById(R.id.inputEmail);
+        final EditText passInput = findViewById(R.id.inputPass);
+        final Button loginButton = findViewById(R.id.buttonLogin);
         final TextView registerClickable = (TextView) findViewById(R.id.registerClickable);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener (new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                final String email =  emailInput.getText().toString();
+            public void onClick(View view) {
+                final String email = emailInput.getText().toString();
                 final String password = passInput.getText().toString();
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                Response.Listener<String> responseListener = new Response.Listener<String> () {
                     @Override
                     public void onResponse(String response) {
                         try{
@@ -44,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
                                 builder.setMessage("Login Success")
                                         .create()
                                         .show();
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
                             }
                         } catch (JSONException e) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 };
-                LoginRequest loginRequest = new LoginRequest(email, password, responseListener);
+                LoginRequest loginRequest = new LoginRequest(email,password,responseListener);
                 RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                 queue.add(loginRequest);
             }
