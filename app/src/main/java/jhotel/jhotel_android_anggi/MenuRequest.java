@@ -8,7 +8,7 @@ import com.android.volley.toolbox.StringRequest;
  */
 
 public class MenuRequest extends StringRequest {
-    private static final String Menu_URL = "http://192.168.1.101:8080/vacantrooms";
+    private static final String Menu_URL = "http://192.168.1.103:8080/vacantrooms";
 
     public MenuRequest(Response.Listener<String> listener) {
         super(Method.GET, Menu_URL, listener, null);
