@@ -10,11 +10,11 @@ import com.android.volley.Response;
  */
 
 public class PesananSelesaiRequest extends StringRequest {
-    private static final String Regis_URL = "http://192.168.1.103:8080/finishpesanan";
+    private static final String PesananSelesai_URL = "http://192.168.1.103:8080/finishpesanan";
     private Map<String, String> params;
 
     public PesananSelesaiRequest(String id_pesanan, Response.Listener<String> listener) {
-        super(Method.POST, Regis_URL, listener, null);
+        super(Method.POST, PesananSelesai_URL, listener, null);
         params = new HashMap<>();
         params.put("id_pesanan",id_pesanan);
     }

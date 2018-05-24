@@ -1,13 +1,15 @@
 package jhotel.jhotel_android_anggi;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.RelativeLayout;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,7 +19,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SelesaiPesananActivity extends AppCompatActivity {
-    private int currentUserId;
+    private static int currentUserId;
+    private static String currentname;
+    private static String currentemail;
+    private static String currentdob;
     private int id_pesanan;
     private int biaya_akhir;
     private int jumlah_hari;
@@ -27,22 +32,26 @@ public class SelesaiPesananActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selesai_pesanan);
-        Intent i = getIntent();
-        Bundle b = i.getExtras();
+
+        Intent selesaiPesananIntent = getIntent();
+        Bundle b = selesaiPesananIntent.getExtras();
         if(b!=null){
             currentUserId = b.getInt("id_customer");
+            currentname = b.getString("nama");
+            currentemail = b.getString("email");
+            currentdob = b.getString("dob");
         }
 
-        final Button batal = (Button) findViewById(R.id.batal);
-        final Button selesai = (Button) findViewById(R.id.selesai);
-        final RelativeLayout tampilan = (RelativeLayout) findViewById(R.id.tampilan);
-        tampilan.setVisibility(View.INVISIBLE);
+        final Button batal = findViewById(R.id.batal);
+        final Button selesai = findViewById(R.id.selesai);
+
         fetchPesanan();
 
         batal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View V) {
                 final String id = String.valueOf(id_pesanan);
+
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -50,21 +59,32 @@ public class SelesaiPesananActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse != null) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(SelesaiPesananActivity.this);
-                                builder.setMessage("Batal Success")
-                                        .create()
-                                        .show();
+                                builder.setMessage("Pesanan Berhasil Dibatalkan").create().show();
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent mainInt = new Intent(SelesaiPesananActivity.this, DashboardActivity.class);
+                                        Bundle extras = new Bundle();
+                                        extras.putInt("id_customer",currentUserId);
+                                        extras.putString("nama",currentname);
+                                        extras.putString("email",currentemail);
+                                        extras.putString("dob",currentdob);
+                                        mainInt.putExtras(extras);
+                                        SelesaiPesananActivity.this.startActivity(mainInt);
+                                    }
+                                }, 2000);
                             }
                         } catch (JSONException e) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(SelesaiPesananActivity.this);
-                            builder.setMessage("Batal Failed.")
-                                    .create()
-                                    .show();
+                            builder.setMessage("Pesanan Gagal Dibatalkan.").create().show();
                         }
                     }
                 };
                 PesananBatalRequest batalRequest = new PesananBatalRequest(id, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(SelesaiPesananActivity.this);
                 queue.add(batalRequest);
+                batal.setVisibility(View.INVISIBLE);
+                selesai.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -72,6 +92,7 @@ public class SelesaiPesananActivity extends AppCompatActivity {
             @Override
             public void onClick(View V) {
                 final String id = String.valueOf(id_pesanan);
+
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -79,61 +100,76 @@ public class SelesaiPesananActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse != null) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(SelesaiPesananActivity.this);
-                                builder.setMessage("Selesai Success")
-                                        .create()
-                                        .show();
+                                builder.setMessage("Pesanan Berhasil Diselesaikan").create().show();
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent mainInt = new Intent(SelesaiPesananActivity.this, DashboardActivity.class);
+                                        Bundle extras = new Bundle();
+                                        extras.putInt("id_customer",currentUserId);
+                                        extras.putString("nama",currentname);
+                                        extras.putString("email",currentemail);
+                                        extras.putString("dob",currentdob);
+                                        mainInt.putExtras(extras);
+                                        SelesaiPesananActivity.this.startActivity(mainInt);
+                                    }
+                                }, 2000);
                             }
                         } catch (JSONException e) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(SelesaiPesananActivity.this);
-                            builder.setMessage("Selesai Failed.")
-                                    .create()
-                                    .show();
+                            builder.setMessage("Pesanan Gagal Diselesaikan").create().show();
                         }
                     }
                 };
                 PesananSelesaiRequest selesaiRequest = new PesananSelesaiRequest(id, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(SelesaiPesananActivity.this);
                 queue.add(selesaiRequest);
+                batal.setVisibility(View.INVISIBLE);
+                selesai.setVisibility(View.INVISIBLE);
             }
         });
-
     }
 
     public void fetchPesanan(){
         final String id_customer = String.valueOf(currentUserId);
+        final TextView idPesanan = findViewById(R.id.idPesanan);
+        final TextView biaya = findViewById(R.id.biaya);
+        final TextView tanggal_pesan = findViewById(R.id.tanggal_pesan);
+        final TextView hari = findViewById(R.id.hari);
+
         Response.Listener<String> responseListener = new Response.Listener<String> () {
             @Override
             public void onResponse(String response) {
                 try{
                     JSONObject jsonResponse = new JSONObject(response);
-                    if(jsonResponse!=null) {
-                        final TextView idPesanan = (TextView) findViewById(R.id.idPesanan);
-                        final TextView biaya = (TextView) findViewById(R.id.biaya);
-                        final TextView tanggal_pesan = (TextView) findViewById(R.id.tanggal_pesan);
-                        final TextView hari = (TextView) findViewById(R.id.hari);
-                        final Button batal = (Button) findViewById(R.id.batal);
-                        final Button selesai = (Button) findViewById(R.id.selesai);
+                    id_pesanan = jsonResponse.getInt("id");
+                    biaya_akhir = jsonResponse.getInt("biaya");
+                    jumlah_hari = jsonResponse.getInt("jumlahHari");
+                    tanggal = jsonResponse.getString("tanggalPesan");
 
-                        final RelativeLayout tampilan = (RelativeLayout) findViewById(R.id.tampilan);
-                        id_pesanan = jsonResponse.getInt("id");
-                        biaya_akhir = jsonResponse.getInt("biaya");
-                        jumlah_hari = jsonResponse.getInt("jumlahHari");
-                        tanggal = jsonResponse.getString("tanggalPesan");
-
-                        idPesanan.setText(String.valueOf(id_pesanan));
-                        biaya.setText(String.valueOf(biaya_akhir));
-                        hari.setText(String.valueOf(jumlah_hari));
-                        tanggal_pesan.setText(tanggal);
-                        tampilan.setVisibility(View.VISIBLE);
-                    } else {
-                        Intent gagalInt = new Intent(SelesaiPesananActivity.this, MainActivity.class);
-                        gagalInt.putExtra("id_customer", currentUserId);
-                        SelesaiPesananActivity.this.startActivity(gagalInt);
-                    }
+                    idPesanan.setText(String.valueOf(id_pesanan));
+                    biaya.setText(String.valueOf(biaya_akhir));
+                    hari.setText(String.valueOf(jumlah_hari));
+                    tanggal_pesan.setText(tanggal);
                 } catch (JSONException e) {
-                    Intent gagalInt = new Intent(SelesaiPesananActivity.this, MainActivity.class);
-                    gagalInt.putExtra("id_customer", currentUserId);
-                    SelesaiPesananActivity.this.startActivity(gagalInt);
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(SelesaiPesananActivity.this);
+                    builder.setMessage("Belum ada pesanan!");
+                    android.support.v7.app.AlertDialog alert = builder.create();
+                    alert.show();
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent gagalInt = new Intent(SelesaiPesananActivity.this, DashboardActivity.class);
+                            Bundle extras = new Bundle();
+                            extras.putInt("id_customer",currentUserId);
+                            extras.putString("nama",currentname);
+                            extras.putString("email",currentemail);
+                            extras.putString("dob",currentdob);
+                            gagalInt.putExtras(extras);
+                            SelesaiPesananActivity.this.startActivity(gagalInt);
+                        }
+                    }, 2000);
+
                 }
             }
         };
@@ -142,3 +178,4 @@ public class SelesaiPesananActivity extends AppCompatActivity {
         queue.add(fetchPesananRequest);
     }
 }
+

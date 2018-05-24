@@ -28,7 +28,6 @@ public class MenuListAdapter extends BaseExpandableListAdapter {
         this.childMapping=childMapping;
     }
 
-
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
         return this.childMapping.get(this.listHotel.get(groupPosition))
@@ -44,7 +43,7 @@ public class MenuListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
-        final String childText = getChild(groupPosition, childPosition).toString();
+        final String childText = ((Room) getChild(groupPosition, childPosition)).getRoomNumber();
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context

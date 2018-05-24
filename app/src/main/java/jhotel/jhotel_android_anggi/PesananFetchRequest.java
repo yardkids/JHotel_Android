@@ -10,11 +10,11 @@ import com.android.volley.Response;
  */
 
 public class PesananFetchRequest extends StringRequest {
-    private static final String Regis_URL = "http://192.168.1.103:8080/pesanancustomer/";
+    private static final String Fetch_URL = "http://192.168.1.103:8080/pesanancustomer/";
     private Map<String, String> params;
 
     public PesananFetchRequest(String id_customer, Response.Listener<String> listener) {
-        super(Method.GET, Regis_URL+id_customer, listener, null);
+        super(Method.GET, Fetch_URL+id_customer, listener, null);
         params = new HashMap<>();
     }
     @Override

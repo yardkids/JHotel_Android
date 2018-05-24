@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -31,28 +32,32 @@ public class RegisterActivity extends AppCompatActivity {
                 final String email = emailInputReg.getText().toString();
                 final String password = passInputReg.getText().toString();
 
-                Response.Listener<String> responseListener = new Response.Listener<String> () {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject jsonResponse = new JSONObject(response);
-                            if(jsonResponse!=null) {
-                                AlertDialog.Builder builder= new AlertDialog.Builder(RegisterActivity.this);
-                                builder.setMessage("Registration Success")
-                                        .create()
-                                        .show();
+                if (TextUtils.isEmpty(name)) {
+                    inputName.setError("Name is required!");
+                } else if (TextUtils.isEmpty(email)) {
+                    emailInputReg.setError("Email is required!");
+                } else if (TextUtils.isEmpty(password)) {
+                    passInputReg.setError("Password is required!");
+                } else {
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                if (jsonResponse != null) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+                                    builder.setMessage("Registration Success").create().show();
+                                }
+                            } catch (JSONException e) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+                                builder.setMessage("Registration Failed.").create().show();
                             }
-                        } catch (JSONException e) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                            builder.setMessage("Registration Failed.")
-                                    .create()
-                                    .show();
                         }
-                    }
-                };
-                RegisterRequest registerRequest = new RegisterRequest(name,email,password,responseListener);
-                RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
-                queue.add(registerRequest);
+                    };
+                    RegisterRequest registerRequest = new RegisterRequest(name, email, password, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
+                    queue.add(registerRequest);
+                }
             }
         });
     }

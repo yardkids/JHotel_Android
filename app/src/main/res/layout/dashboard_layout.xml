@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center_horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List Menu"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="3">
+
+            <TableRow>
+            <Button
+                android:id="@+id/btn_pesan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_weight="1"
+                android:layout_marginStart="1px"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/btn_pesan"
+                android:text="Pesan Kamar"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow>
+            <Button
+                android:id="@+id/btn_lihatPesanan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_weight="1"
+                android:layout_marginStart="1px"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/btn_lihat_pesanan"
+                android:text="Lihat Pesanan"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow>
+            <Button
+                android:id="@+id/btn_infoHotel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_weight="1"
+                android:layout_marginStart="1px"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/btn_info_hotel"
+                android:text="Info Hotel"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+</ScrollView>
